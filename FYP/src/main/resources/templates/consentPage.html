@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Singpass Consent Page</title>
+    <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+    <script src="/bootstrap/js/bootstrap.js"></script>
+    <div th:replace="~{fragments/header}"></div>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .cancel {
+            background-color: #dc3545; /* Red */
+            color: white;
+        }
+        .cancel:hover {
+            background-color: #c82333; /* Darker red */
+        }
+        .agree {
+            background-color: #28a745; /* Green */
+            color: white;
+        }
+        .agree:hover {
+            background-color: #218838; /* Darker green */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <h2 class="text-center">Singpass Consent</h2>
+        </header>
+        <hr>
+        <main>
+            <p>
+                By proceeding, you consent to the retrieval of your personal information from Singpass. Your data will be used solely for authentication and registration purposes.
+            </p>
+            <p>This portal is operated by the Government Technology Agency of Singapore (GovTech) on behalf of the Government of Singapore.
+                By using this portal, you agree to the Singpass Terms of Use. If you do not agree, please exit now.
+            </p>
+            <hr>
+            <h4>Information Retrieved:</h4>
+            <ul>
+                <li>NRIC/FIN</li>
+                <li>Full Name(As Per NRIC)</li>
+                <li>Sex</li>
+                <li>Race</li>
+                <li>Country of Birth</li>
+                <li>Date of Birth</li>
+                <li>Email</li>
+                <li>Mobile Number(Personal)</li>
+                <li>Housing Type</li>
+                <li>HDB Type</li>
+                <li>Marital Status</li>
+                <li>Highest Education Level</li>
+                <li>IRAS Assessable Income (Latest Year)</li>
+                <li>Ownership of Private Property</li>
+                <li>CPF Contribution History (up to 15 months)</li>
+                <li>CPF Balances</li>
+            </ul>
+            <p>
+                By clicking on "I Agree" you permit this website to retrieve and use the above data.
+            </p>
+        </main>
+        <footer class="footer">
+            <button class="cancel" onclick="giveConsent()">Cancel</button>
+            <button class="agree" onclick="giveConsent()">I Agree</button>
+        </footer>
+    </div>
+
+    <script>
+        function giveConsent() {
+            window.location.href = "/singpass/add?consent=true";
+        }
+    </script>
+    <div th:replace="~{fragments/footer}"></div>
+</body>
+
+</html>

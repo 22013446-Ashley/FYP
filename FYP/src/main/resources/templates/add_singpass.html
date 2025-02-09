@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="ISO-8859-1">
+	<title>SINGPASS</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+	<link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="/css/style.css">
+	<script src="/bootstrap/js/bootstrap.js"></script>
+</head>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+</head>
+
+<body>
+	<div th:replace="fragments/header"></div>
+
+	<div class="container">
+		<main>
+			<div class="center">
+				<br>
+				<div style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+					<h1 style="font-size: 30px; margin: 0;"><b>Create Account Using Singpass</b></h1>
+					<img src="/images/Singpass.png" alt="Singpass Logo" width="85" height="75" />
+				</div>
+
+				<form id="singpassForm" class="needs-validation" th:action="@{/singpass/save}" method="post"
+					th:object="${singpass}" novalidate onsubmit="checkFormSubmission(event)">
+
+
+					<div id="SingpassNRIC">
+						<label for="singpass_Enterednric" class="form-label">Nric:</label>
+						<input id="singpass_Enterednric" type="password" class="form-control" th:field="*{enteredNRIC}"
+							required minlength="9" maxlength="9" style='width: 60%;' />
+						<div class="invalid-feedback">Singpass NRIC is invalid!</div>
+						<p class="text-danger" th:if="${#fields.hasErrors('enteredNRIC')}" th:errors="*{enteredNRIC}">
+						</p>
+
+
+						<div class="mt-3">
+							<button id="fetchData" type="button" class="btn btn-primary">Get
+								Information</button>
+						</div>
+					</div>
+
+					<hr>
+
+					<br>
+					<fieldset class="border rounded-3 p-3">
+						<legend class="float-none w-auto px-3">Contact Information :</legend>
+						<div class="mb-3 col-30">
+							<label for="singpass_email" class="form-label">Email:</label> <input id="singpass_email"
+								type="email" class="form-control" th:field="*{email}" style='width: 60%;' required
+								readonly />
+							<div class="invalid-feedback">Email is invalid!</div>
+							<p class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}" readonly>
+							</p>
+						</div>
+
+						<div class="mb-3 col-30">
+							<label for="singpass_phone" class="form-label">Phone
+								Number:</label> <input id="singpass_phone" type="text" class="form-control"
+								th:field="*{phoneNumber}" required minlength="8" style='width: 60%;' readonly />
+							<div class="invalid-feedback">Phone Number is invalid!</div>
+							<p class="text-danger" th:if="${#fields.hasErrors('phoneNumber')}"
+								th:errors="*{phoneNumber}"></p>
+							<div class="mt-3">
+								<button id="validatePhone" type="button" class="btn btn-primary"
+									onclick="validatePhoneNumber()">Validate
+									Phone Number</button>
+							</div>
+
+						</div>
+					</fieldset>
+
+					<br>
+					<fieldset class="border rounded-3 p-3">
+						<legend class="float-none w-auto px-3">Personal Information :</legend>
+						<label for="singpass_nric" class="form-label">Nric (last 4
+							digits):</label> <input id="singpass_nric" type="text" class="form-control"
+							th:field="*{nric}" required minlength="9" maxlength="9" style='width: 60%;' readonly />
+						<div class="invalid-feedback">NRIC is Invalid!</div>
+						<p class="text-danger" th:if="${#fields.hasErrors('nric')}" th:errors="*{nric}"></p>
+
+
+						<div class="mb-3 col-30">
+							<label for="singpass_name" class="form-label">Name:</label> <input id="singpass_name"
+								type="text" class="form-control" th:field="*{name}" required minlength="5"
+								style='width: 60%;' readonly />
+							<div class="invalid-feedback">Name is invalid!</div>
+							<p class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></p>
+						</div>
+
+						<div class="mb-3 col-30">
+							<label for="singpass_gender" class="form-label">Gender:</label> <input id="singpass_gender"
+								type="text" class="form-control" th:field="*{gender}" required minlength="4"
+								style='width: 60%;' readonly />
+							<div class="invalid-feedback">Gender is invalid!</div>
+							<p class="text-danger" th:if="${#fields.hasErrors('gender')}" th:errors="*{gender}"></p>
+						</div>
+
+						<div class="mb-3 col-30">
+							<label for="singpass_race" class="form-label">Race:</label> <input id="singpass_race"
+								type="text" class="form-control" th:field="*{race}" required minlength="4"
+								style='width: 60%;' readonly />
+							<div class="invalid-feedback">Race is invalid!</div>
+							<p class="text-danger" th:if="${#fields.hasErrors('race')}" th:errors="*{race}"></p>
+						</div>
+
+						<div class="mb-3 col-30">
+							<label for="singpass_nationality" class="form-label">Nationality:</label>
+							<input id="singpass_nationality" type="text" class="form-control" th:field="*{nationality}"
+								required minlength="4" style='width: 60%;' readonly />
+							<div class="invalid-feedback">
+								nationality is invalid!</div>
+							<p class="text-danger" th:if="${#fields.hasErrors('nationality')}"
+								th:errors="*{nationality}"></p>
+						</div>
+
+						<div class="mb-3 col-30">
+							<label for="singpass_dob" class="form-label">Date of
+								Birth(YYYY/MM/dd):</label> <input id="singpass_dob" type="text" class="form-control"
+								th:field="*{dateOfBirth}" style='width: 60%;' required readonly />
+							<div class="invalid-feedback">Date Of Birth is invalid!</div>
+							<p class="text-danger" th:if="${#fields.hasErrors('dateOfBirth')}"
+								th:errors="*{dateOfBirth}"></p>
+						</div>
+
+						<div class="mb-3 col-30">
+							<label for="singpass_housingType" class="form-label">Housing
+								Type:</label> <input id="singpass_housingType" type="text" class="form-control"
+								th:field="*{housingType}" required minlength="8" maxlength="8" style='width: 60%;'
+								readonly />
+							<div class="invalid-feedback">Housing
+								type is invalid!</div>
+							<p class="text-danger" th:if="${#fields.hasErrors('housingType')}"
+								th:errors="*{housingType}"></p>
+						</div>
+
+						<div class="mb-3 col-30">
+							<label for="singpass_hdbType" class="form-label">HDB Type:</label>
+							<input id="singpass_hdbType" type="text" class="form-control" th:field="*{hdbType}" required
+								minlength="8" maxlength="8" style='width: 60%;' readonly />
+							<div class="invalid-feedback">HDB type is invalid!</div>
+							<p class="text-danger" th:if="${#fields.hasErrors('hdbType')}" th:errors="*{hdbType}"></p>
+						</div>
+
+						<div class="mb-3 col-30">
+							<label for="singpass_maritalStatus" class="form-label">Marital
+								Status:</label> <input id="singpass_maritalStatus" type="text" class="form-control"
+								th:field="*{maritalStatus}" required minlength="8" maxlength="8" style='width: 60%;'
+								readonly />
+							<div class="invalid-feedback">valid marital
+								status is invalid!</div>
+							<p class="text-danger" th:if="${#fields.hasErrors('maritalStatus')}"
+								th:errors="*{maritalStatus}"></p>
+						</div>
+
+						<div class="mb-3 col-30">
+							<label for="singpass_education" class="form-label">Education:</label>
+							<input id="singpass_education" type="text" class="form-control" th:field="*{education}"
+								style='width: 60%;' required readonly />
+							<div class="invalid-feedback">Education is invalid</div>
+							<p class="text-danger" th:if="${#fields.hasErrors('education')}" th:errors="*{education}">
+							</p>
+						</div>
+
+						<div class="mb-3 col-30">
+							<label for="singpass_propertyStatus" class="form-label">Property
+								Status:</label> <input id="singpass_propertyStatus" type="text" class="form-control"
+								th:field="*{propertyStatus}" style='width: 60%;' readonly />
+							<div class="invalid-feedback">status is invalid!</div>
+							<p class="text-danger" th:if="${#fields.hasErrors('propertyStatus')}"
+								th:errors="*{propertyStatus}"></p>
+						</div>
+					</fieldset>
+
+					<br>
+					<fieldset class="border rounded-3 p-3">
+						<legend class="float-none w-auto px-3">Income / CPF Details :</legend>
+
+						<div class="mb-3 col-30">
+							<label for="singpass_income" class="form-label">Latest
+								Income:</label> <input id="singpass_income" type="text" class="form-control"
+								th:field="*{income}" style='width: 60%;' required readonly />
+							<div class="invalid-feedback">income is invalid!</div>
+							<p class="text-danger" th:if="${#fields.hasErrors('income')}" th:errors="*{income}"></p>
+						</div>
+
+						<div class="mb-3 col-30">
+							<label for="singpass_cpfOABalance" class="form-label">CPF
+								Balance(Ordinary Account) ($):</label> <input id="singpass_cpfOABalance" type="text"
+								class="form-control" th:field="*{cpfOABalance}" style='width: 60%;' required readonly />
+							<div class="invalid-feedback">CPF
+								Ordinary Account is invalid!</div>
+							<p class="text-danger" th:if="${#fields.hasErrors('cpfOABalance')}"
+								th:errors="*{cpfOABalance}"></p>
+						</div>
+
+						<div class="mb-3 col-30">
+							<label for="singpass_cpfMABalance" class="form-label">CPF
+								Balance(Medisave Account) ($):</label> <input id="singpass_cpfMABalance" type="text"
+								class="form-control" th:field="*{cpfMABalance}" style='width: 60%;' required readonly />
+							<div class="invalid-feedback">CPF
+								Medisave Account is invalid!</div>
+							<p class="text-danger" th:if="${#fields.hasErrors('cpfMABalance')}"
+								th:errors="*{cpfMABalance}"></p>
+						</div>
+
+						<div class="mb-3 col-30">
+							<label for="singpass_cpfSABalance" class="form-label">CPF
+								Balance(Special Account) ($):</label> <input id="singpass_cpfSABalance" type="text"
+								class="form-control" th:field="*{cpfSABalance}" style='width: 60%;' required readonly />
+							<div class="invalid-feedback">CPF
+								Special Account is invalid!</div>
+							<p class="text-danger" th:if="${#fields.hasErrors('cpfSABalance')}"
+								th:errors="*{cpfSABalance}"></p>
+						</div>
+					</fieldset>
+
+					<br>
+
+					<fieldset class="border rounded-3 p-3">
+						<legend class="float-none w-auto px-3">Generate OTP (Use
+							for Login) :</legend>
+						<div class="mb-3 col-30">
+							<label for="singpass_otp" class="form-label">Generate
+								OTP:</label> <input id="singpass_otp" type="number" class="form-control"
+								th:field="*{otp}" style='width: 30%;' maxlength="6" required readonly />
+							<button id="otp" type="button" class="btn btn-primary" onclick="generateOTP()">Generate
+								OTP</button>
+							<div id="otp-feedback" class="invalid-feedback">
+								generate OTP to proceed</div>
+						</div>
+					</fieldset>
+
+
+
+					<div class="form-check mb-3">
+						<input class="form-check-input" type="checkbox" required> <label class="form-check-label">I
+							agree on the <a href="https://portal.singpass.gov.sg/home/ui/terms-of-use">Terms and
+								Conditions</a>
+						</label>
+						<div class="invalid-feedback">Please tick on the box if you agree</div>
+
+						<div class="mt-3">
+							<button type="submit" class="btn btn-primary">Create
+								Account</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</main>
+	</div>
+	<div th:replace="fragments/footer"></div>
+</body>
+<script>
+	let phoneNumbers = new Set();
+	let isValidated = false;
+
+	function validatePhoneNumber() {
+		const phoneNumberInput = document.getElementById('singpass_phone');
+		const phoneNumber = phoneNumberInput.value;
+
+		if (phoneNumbers.has(phoneNumber)) {
+			alert('This phone number has already been entered. Go to Login Page');
+			phoneNumberInput.value = '';
+			isValidated = false;
+			return false;
+		}
+		if (phoneNumber == null) {
+			alert('This phone number is null.');
+			phoneNumberInput.value = '';
+			isValidated = false;
+			return false;
+		}
+
+		phoneNumbers.add(phoneNumber);
+		isValidated = true;
+		alert('Phone number validated. You can now submit the form.');
+		return true;
+	}
+
+	function checkFormSubmission(event) {
+		if (!isValidated) {
+			alert('Please validate the data before submitting.');
+			event.preventDefault();
+		}
+	}
+
+	function redirectconsent() {
+		window.location.href = "/consent";
+	}
+
+	function redirectconsent_uinfin() {
+		window.location.href = "/consent_uinfin";
+	}
+
+	document.addEventListener('DOMContentLoaded', async () => {
+		const urlParams = new URLSearchParams(window.location.search);
+		const consentGiven = urlParams.get('consent');
+
+		if (consentGiven === 'true') {
+			try {
+				const response = await fetch("http://localhost:8080/proxy/person-sample");
+				if (!response.ok) {
+					throw new Error('Network response was not ok');
+				}
+
+				const contentType = response.headers.get('content-type');
+				if (contentType && contentType.includes('application/json')) {
+					const data = await response.json();
+					console.log('Data received:', data);
+
+					updateFormFields(data);
+				} else {
+					throw new Error('Response was not JSON');
+				}
+			} catch (error) {
+				console.error('There was a problem with the fetch operation:', error);
+			}
+		}
+
+		const buttonElement = document.getElementById('fetchData');
+		buttonElement.addEventListener('click', async () => {
+			const urlParams = new URLSearchParams(window.location.search);
+			const consentGiven = urlParams.get('consent_uinfin');
+			const uinfin = document.getElementById('singpass_Enterednric').value;
+			if (uinfin) {
+				try {
+					const apiUrl = `http://localhost:8080/proxy/person-sample/${uinfin}`;
+					const response = await fetch(apiUrl);
+
+					if (!response.ok) {
+						document.getElementById("singpassForm").reset();
+						throw new Error('Network response was not ok');
+					}
+
+					const contentType = response.headers.get('content-type');
+					if (contentType && contentType.includes('application/json')) {
+						const data = await response.json();
+						console.log('Data received:', data);
+
+						updateFormFields(data);
+					} else {
+						throw new Error('Response was not JSON');
+					}
+				} catch (error) {
+					console.error('There was a problem with the fetch operation:', error);
+				}
+			} else {
+				console.error('Please enter a valid UINFIN');
+				document.getElementById("singpassForm").reset();
+			}
+		});
+
+		const form = document.querySelector('.needs-validation');
+
+		form.addEventListener('submit', function (event) {
+			if (!form.checkValidity()) {
+				event.preventDefault();
+				event.stopPropagation();
+			}
+			form.classList.add('was-validated');
+		});
+	});
+
+	function updateFormFields(data) {
+		document.getElementById('singpass_Enterednric').value = data.uinfin.value;
+		document.getElementById('singpass_nric').value = data.partialuinfin.value;
+		document.getElementById('singpass_name').value = data.name.value;
+		document.getElementById('singpass_gender').value = data.sex.desc;
+		document.getElementById('singpass_email').value = data.email.value;
+		document.getElementById('singpass_phone').value = data.mobileno.nbr.value;
+		document.getElementById('singpass_race').value = data.race.desc;
+		document.getElementById('singpass_nationality').value = data.nationality.desc;
+		document.getElementById('singpass_dob').value = data.dob.value;
+		document.getElementById('singpass_housingType').value = data.housingtype.desc;
+		document.getElementById('singpass_hdbType').value = data.hdbtype.desc;
+		document.getElementById('singpass_maritalStatus').value = data.marital.desc;
+		document.getElementById('singpass_education').value = data.edulevel.desc;
+		document.getElementById('singpass_income').value = data.noa.amount.value; // Total income after minus bills
+		document.getElementById('singpass_propertyStatus').value = data.ownerprivate.value;
+		document.getElementById('singpass_cpfOABalance').value = data.cpfbalances.oa.value;
+		document.getElementById('singpass_cpfMABalance').value = data.cpfbalances.ma.value;
+		document.getElementById('singpass_cpfSABalance').value = data.cpfbalances.sa.value;
+	}
+
+	function generateOTP() {
+		let digits = '0123456789';
+		let OTP = '';
+		let len = digits.length;
+		for (let i = 0; i < 6; i++) {
+			OTP += digits[Math.floor(Math.random() * len)];
+		}
+		document.getElementById("singpass_otp").value = OTP;
+		document.getElementById("otp-feedback").style.display = "none";
+		return OTP;
+	}
+
+	document.querySelector('form').addEventListener('submit', function (event) {
+		const otpField = document.getElementById("singpass_otp");
+		if (!otpField.value) {
+			event.preventDefault();
+			document.getElementById("otp-feedback").style.display = "block";
+		}
+	});
+
+</script>
+
+</html>

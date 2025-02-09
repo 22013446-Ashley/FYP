@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Application Form</title>
+	<link rel="icon" href="/images/NETS.png" type="image/png">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css">
+	<style>
+		.section-title {
+			background-color: #004A91;
+			color: white;
+			padding: 10px;
+			margin-bottom: 20px;
+		}
+
+		.form-section {
+			border: 1px solid #004A91;
+			padding: 20px;
+			margin-bottom: 20px;
+		}
+
+		.form-label {
+			font-weight: bold;
+		}
+
+		.header-container {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 20px;
+		}
+
+		.contact-info {
+			text-align: right;
+			font-size: 14px;
+		}
+
+		.header-logo {
+			max-height: 60px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container mt-5" id="form-container">
+		<div th:replace="~{fragments/header}"></div>
+		<div class="header-container">
+			<img src="/images/NETS.png" alt="NETS Logo" class="header-logo">
+			<div class="contact-info">
+				<p>351 Braddell Road #01-03 Singapore 579713</p>
+				<p>
+					Tel: 62741212, Email: <a href="mailto:info@nets.com.sg">info@nets.com.sg</a>,
+					Website: <a href="http://www.nets.com.sg" target="_blank">www.nets.com.sg</a>
+				</p>
+			</div>
+		</div>
+		<h1 class="text-center mb-4">Application Form</h1>
+
+		<form id="applicationForm">
+			<div class="form-section">
+				<div class="section-title">1. Business Details for Corporate Customer Only</div>
+				<div class="row mb-3">
+					<div class="col-md-6">
+						<label for="custNameTX" class="form-label">Customer Name</label>
+						<input type="text" id="custNameTX" name="custNameTX" class="form-control">
+					</div>
+					<div class="col-md-6">
+						<label for="businessRegNumber" class="form-label">Business Registration Number</label>
+						<input type="text" id="businessRegNumber" name="businessRegNumber" class="form-control">
+					</div>
+				</div>
+				<div class="mb-3">
+					<label for="tradingName" class="form-label">Trading Name (Max 25 characters)</label>
+					<input type="text" id="tradingName" name="tradingName" class="form-control">
+				</div>
+			</div>
+
+			<div class="form-section">
+				<div class="section-title">2. Account Crediting Information</div>
+				<div class="row mb-3">
+					<div class="col-md-6">
+						<label class="form-label">Bank Name</label>
+						<select class="form-select" name="bankName">
+							<option value="DBS / POSB">DBS / POSB</option>
+							<option value="UOB">UOB</option>
+							<option value="OCBC">OCBC</option>
+							<option value="Other">Other</option>
+						</select>
+					</div>
+					<div class="col-md-6">
+						<label for="accountName" class="form-label">Account Name</label>
+						<input type="text" id="accountName" name="accountName" class="form-control">
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<button class="btn btn-primary mt-3" onclick="downloadPdf()">Download PDF</button>
+	<button class="btn btn-secondary mt-3" onclick="preFillForm()">Pre-fill Form</button>
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+	<script>
+		async function downloadPdf() {
+			const formContainer = document.getElementById("form-container");
+			const canvas = await html2canvas(formContainer, {scale: 2, useCORS: true});
+			const imgData = canvas.toDataURL("image/png");
+			const {jsPDF} = window.jspdf;
+			const pdf = new jsPDF("p", "mm", "a4");
+			const imgWidth = 210;
+			const imgHeight = (canvas.height * imgWidth) / canvas.width;
+			pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+			pdf.save("application-form.pdf");
+		}
+
+		async function preFillForm() {
+			try {
+				const response = await fetch('/api/excel/form-data');
+				if (!response.ok) throw new Error('Failed to fetch form data');
+
+				const data = await response.json();
+
+				// Map the received data to form fields
+				document.getElementById("custNameTX").value = data.custNameTX || '';
+				document.getElementById("tradingName").value = data.tradingName || '';
+				document.getElementById("phoneNum").value = data.phoneNum || '';
+				document.getElementById("email").value = data.email || '';
+
+			} catch (error) {
+				console.error('Error fetching form data:', error);
+			}
+		}
+	</script>
+</body>
+
+</html>

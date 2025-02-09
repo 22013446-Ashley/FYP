@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>NETS - LOGIN</title>
+<link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+<script src="/bootstrap/js/bootstrap.js"></script>
+<style>
+	.singpass-button {
+		background-color: #DB2861;
+		color: white;
+		padding: 10px 20px;
+		border: none;
+		border-radius: 4px;
+		cursor: pointer;
+		font-size: 16px;
+		margin-top: 20px;
+		width: 100%;
+		display: block;
+		text-align: center;
+		text-decoration: none;
+	}
+	.singpass-button:hover {
+		background-color: #B32252;
+		color: white;
+		text-decoration: none;
+	}
+	.or-divider {
+		text-align: center;
+		margin: 20px 0;
+		position: relative;
+	}
+	.or-divider:before,
+	.or-divider:after {
+		content: "";
+		position: absolute;
+		width: 45%;
+		height: 1px;
+		background-color: #ddd;
+		top: 50%;
+	}
+	.or-divider:before { left: 0; }
+	.or-divider:after { right: 0; }
+</style>
+</head>
+<body>
+	<div class="container">
+		<div th:replace="~{fragments/header}"></div>
+		<main>
+			<div class="row justify-content-center">
+				<div class="col-md-6 col-lg-4">
+					<h1 class="text-center mb-4">Please Login</h1>
+					
+					<!-- Singpass Login Button -->
+					<a th:href="@{/consentPage}" class="singpass-button">
+						Login with Singpass
+					</a>
+
+					<div class="or-divider">
+						<span>OR</span>
+					</div>
+
+					<!-- SQL Login Form -->
+					<form th:action="@{/login}" method="post">
+						<div th:if="${param.error}" class="alert alert-danger">
+							Invalid NRIC please create an account.
+						</div>
+						<div th:if="${param.logout}" class="alert alert-success">
+							You have been logged out.
+						</div>
+						<div class="mb-3">
+							<label for="password" class="form-label">NRIC:</label> 
+							<input type="text" class="form-control" id="password" name="password" required /> 
+						</div>
+						<div class="d-grid">
+							<button type="submit" class="btn btn-primary">Log in</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</main>
+		<div th:replace="~{fragments/footer}"></div>
+	</div>
+</body>
+</html>
