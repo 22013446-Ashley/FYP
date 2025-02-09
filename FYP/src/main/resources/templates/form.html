@@ -167,71 +167,75 @@
 		</form>
 	</div>
 
-	<button class="btn btn-primary mt-3" onclick="downloadPdf()">Download
-		PDF</button>
+	
+	<button class="btn btn-primary mt-3" onclick="downloadPdf()">Download PDF</button>
 
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-	<script
-		src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 	<script>
 	const canvas = document.getElementById("signatureCanvas");
-    const ctx = canvas.getContext("2d");
-    let drawing = false;
+	const ctx = canvas.getContext("2d");
+	let drawing = false;
 
-    canvas.addEventListener("mousedown", startDrawing);
-    canvas.addEventListener("mouseup", stopDrawing);
-    canvas.addEventListener("mousemove", draw);
-    canvas.addEventListener("touchstart", startDrawing);
-    canvas.addEventListener("touchend", stopDrawing);
-    canvas.addEventListener("touchmove", draw);
+	canvas.addEventListener("mousedown", startDrawing);
+	canvas.addEventListener("mouseup", stopDrawing);
+	canvas.addEventListener("mousemove", draw);
+	canvas.addEventListener("mouseleave", stopDrawing);
 
-    function startDrawing(event) {
-        drawing = true;
-        ctx.beginPath();
-        ctx.moveTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
-    }
+	canvas.addEventListener("touchstart", startDrawing, { passive: false });
+	canvas.addEventListener("touchend", stopDrawing);
+	canvas.addEventListener("touchmove", draw, { passive: false });
 
-    function stopDrawing() {
-        drawing = false;
-        ctx.closePath();
-    }
+	function getPosition(event) {
+		let rect = canvas.getBoundingClientRect();
+		if (event.touches) {
+			return {
+				x: event.touches[0].clientX - rect.left,
+				y: event.touches[0].clientY - rect.top
+			};
+		} else {
+			return {
+				x: event.clientX - rect.left,
+				y: event.clientY - rect.top
+			};
+		}
+	}
 
-    function draw(event) {
-        if (!drawing) return;
-        event.preventDefault();
-        ctx.lineTo(event.clientX - canvas.offsetLeft, event.clientY - canvas.offsetTop);
-        ctx.strokeStyle = "#000";
-        ctx.lineWidth = 2;
-        ctx.stroke();
-    }
+	function startDrawing(event) {
+		event.preventDefault();
+		drawing = true;
+		let pos = getPosition(event);
+		ctx.beginPath();
+		ctx.moveTo(pos.x, pos.y);
+	}
 
-        async function downloadPdf() {
-            const formContainer = document.getElementById("form-container");
+	function stopDrawing() {
+		drawing = false;
+		ctx.closePath();
+	}
 
-            
-            const canvas = await html2canvas(formContainer, {
-                scale: 2,
-                useCORS: true 
-            });
-            
-            const signatureImg = canvas.toDataURL("image/png");
-            const imgData = canvas.toDataURL("image/png");
+	function draw(event) {
+		if (!drawing) return;
+		event.preventDefault();
+		let pos = getPosition(event);
+		ctx.lineTo(pos.x, pos.y);
+		ctx.strokeStyle = "#000";
+		ctx.lineWidth = 2;
+		ctx.stroke();
+	}
 
-            
-            const { jsPDF } = window.jspdf;
-            const pdf = new jsPDF("p", "mm", "a4");
-
-            
-            const imgWidth = 210; 
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-            pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-
-            pdf.save("application-form.pdf");
-            
-        }
-    </script>
+	async function downloadPdf() {
+		const formContainer = document.getElementById("form-container");
+		const canvas = await html2canvas(formContainer, { scale: 2, useCORS: true });
+		const imgData = canvas.toDataURL("image/png");
+		const { jsPDF } = window.jspdf;
+		const pdf = new jsPDF("p", "mm", "a4");
+		const imgWidth = 210;
+		const imgHeight = (canvas.height * imgWidth) / canvas.width;
+		pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+		pdf.save("application-form.pdf");
+	}
+	</script>
 </body>
 <div th:replace="fragments/footer"></div>
 </html>
