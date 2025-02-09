@@ -46,15 +46,6 @@ public class Form {
 	public Form() {
 	}
 
-	public Form(String custNameTX, String email, String tradingName, String ctcName,
-			String phoneNum) {
-		this.custNameTX = custNameTX;
-		this.email = email;
-		this.tradingName = tradingName;
-		this.ctcName = ctcName;
-		this.phoneNum = phoneNum;
-	}
-
 	public String getCustNameTX() {
 		return custNameTX;
 	}
@@ -103,8 +94,4 @@ public class Form {
 		this.phoneNum = phoneNum;
 	}
 
-	@Override
-	public String toString() {
-		return "Form [custNameTX=" + custNameTX + ", email=" + email + ", tradingName=" + tradingName + ", ctcName=" + ctcName + ", phoneNum=" + phoneNum + "]";
-	}
 }

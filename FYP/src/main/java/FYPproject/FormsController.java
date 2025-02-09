@@ -13,31 +13,25 @@
 
 package FYPproject;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import jakarta.validation.Valid;
 
-@Controller
+
+@RestController
+@RequestMapping("/api/form")
 public class FormsController {
-	@GetMapping("/form")
-	public String showForm(Model model) {
-		model.addAttribute("form", new Form());
-		return "form";
-	}
 
-	@PostMapping("/form/submit")
-	public String submitForm(@Valid @ModelAttribute("form") Form form, BindingResult result, Model model) {
-		if (result.hasErrors()) {
-			return "form";
-		}
-		System.out.println("Form submitted: " + form);
-		model.addAttribute("message", "Form submitted successfully!");
-		return "success";
-	}
+    @Autowired
+    private FormService formService;
 
+    @GetMapping("/get")
+    public Optional<Form> getForm(@RequestParam String tradingName) {
+        return formService.getCustomerByTradingName(tradingName);
+    }
 }

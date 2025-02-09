@@ -50,7 +50,7 @@ public class WebSecurityConfig {
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.authorizeHttpRequests((authorizeHttpRequests) -> authorizeHttpRequests
 	        .requestMatchers("/form","/form/submit,","/submit").hasRole("ADMIN")
-        	.requestMatchers("/home","/consentPage","/singpass/add","/singpass/save","/proxy/person-sample","/application-data/","/api","api/excel/form-data").permitAll() //Home page and SINGPASS login is visible without logging in
+        	.requestMatchers("/home","/consentPage","/singpass/add","/singpass/save","/proxy/person-sample","/application-data/","/get","/api/form").permitAll() //Home page and SINGPASS login is visible without logging in
         	.requestMatchers("/bootstrap/*/*").permitAll() //for static resources, visible to all
         	.requestMatchers("/images/*").permitAll() //for static resources, visible to all
             .anyRequest().authenticated()//Other requests such as to view an item with id 1: /items/1            
